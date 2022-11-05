@@ -71,10 +71,29 @@ pipeline {
                 ])
                 script{
                     def commitChangeset = sh(returnStdout: true, script: 'git diff-tree --no-commit-id --name-status -r HEAD').trim()
+                    echo '#--------- commitChangeset --------------------#'
                     echo "${commitChangeset}"
+                    echo '#-----------------------------#'
                 }
-                echo "#-----------------------------#"
+                echo '#-----------------------------#'
                 echo "${currentBuild.changeSets}"
+            }
+        }
+        stage('Stage-1: Checking the target branch') {
+            when {
+                // To check current branch is in allowed list
+                // To check the target branch is master
+                allOf {
+                    branch pattern: "${params.sourceBranchPattern}", comparator: "REGEXP";
+                    changeRequest target: "${params.targetBranch}"; //to check the target branch is develop
+                    changeRequest title: "${params.prNamingPattern}", comparator: "REGEXP" //to check the PR name is in allowed style
+                }
+            }
+            steps {
+                echo " Correct branch ${params.sourceBranch} with pattern: ${params.sourceBranchPattern}"
+                echo "changeRequest target: ${params.targetBranch}"
+                echo "Correct PR naming: ${params.prName}"
+                echo "Stage-1: End of check for  ${params.targetBranch} status ${currentBuild.Result}"
             }
         }
     }
