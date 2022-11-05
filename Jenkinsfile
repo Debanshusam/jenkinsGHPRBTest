@@ -1,6 +1,6 @@
 pipeline {
     parameters {
-        boolean(name: 'jobDebug', defaultValue: false, description: 'enable to show environ values',trim: true)
+        booleanParam(name: 'jobDebug', defaultValue: false, description: 'enable to show environ values',trim: true)
     }
     agent {label 'built-in'}
     stages {
