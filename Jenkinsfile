@@ -10,7 +10,7 @@ def successEmailbody = "Pull Request Build Succeeded : ${ghprbPullTitle} . Link:
 def emailReceipts = "debanshusamantaray@gmail.com"
 pipeline {
     parameters {
-        booleanParam(name: 'jobDebug', defaultValue: false, description: 'enable to show environ values')
+        booleanParam(name: 'jobDebug', defaultValue: true, description: 'enable to show environ values')
     }
     agent {label 'built-in'}
     stages {
@@ -41,7 +41,7 @@ pipeline {
                         $class: 'GitSCM',
                         branches: [[name: "${ghprbActualCommit}"]],
                         extensions: [],
-                        userRemoteConfigs: [[credentialsId: 'github-debanshu-PAT',url: "${params.repoURL}"]]
+                        userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline',url: "${params.repoURL}"]]
                 ])
             }
         }
