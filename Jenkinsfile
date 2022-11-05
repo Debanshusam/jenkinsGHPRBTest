@@ -16,6 +16,6 @@ pipeline {
                 echo "ghprbCommentBody ${ghprbCommentBody}"
                 echo "sha1 ${sha1}"
             }
-        
+        }
     }
 }
