@@ -77,14 +77,11 @@ pipeline {
                     echo '#--------whatchanged-------------#'
                     echo "${whatchanged}"
                     echo '#-----------------------------#'
-                    
-                }
-                echo '#--------currentBuild.changeSets-----#'
-                script {
-                   def changeLogSets = currentBuild.changeSets
-                   for (int i = 0; i < changeLogSets.size(); i++) {
-                   def entries = changeLogSets[i].items
-                   for (int j = 0; j < entries.length; j++) {
+                    echo '#--------currentBuild.changeSets-----#'
+                    def changeLogSets = currentBuild.changeSets
+                    for (int i = 0; i < changeLogSets.size(); i++) {
+                    def entries = changeLogSets[i].items
+                    for (int j = 0; j < entries.length; j++) {
                        def entry = entries[j]
                        echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
                        def files = new ArrayList(entry.affectedFiles)
@@ -93,9 +90,10 @@ pipeline {
                            echo " ${file.editType.name} ${file.path}"
                        }
                     }
-                   }
                 }
-                }
+            }
+            }
+            }
         stage('Stage-1: Checking the target branch') {
             when {
                 // To check current branch is in allowed list
@@ -115,12 +113,3 @@ pipeline {
         }
     }
 }
-
-
-//checkout([$class: 'GitSCM', 
-//branches: [[name: '*/master']], extensions: [[$class: 'ChangelogToBranch',
-//options: [compareRemote: 'https://github.com/Debanshusam/jenkinsGHPRBTest.git', compareTarget: '/main']], 
-//[$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]],
-// userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline', 
-//refspec: '+refs/pull/*:refs/remotes/origin/pr/*', 
-//url: 'https://github.com/Debanshusam/jenkinsGHPRBTest.git']]])
