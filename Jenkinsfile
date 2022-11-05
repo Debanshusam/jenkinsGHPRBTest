@@ -1,7 +1,13 @@
 pipeline {
+    parameters {
+        boolean(name: 'jobDebug', defaultValue: false, description: 'enable to show environ values',trim: true)
+    }
     agent {label 'built-in'}
     stages {
         stage ('Debugging stage'){
+            when{
+                expression { ${params.jobDebug} == true }
+            }
             steps{
                 sh 'printenv'
                 echo "#------------------------------------------#"
