@@ -65,7 +65,7 @@ pipeline {
             steps{
                 checkout ([
                         $class: 'GitSCM',
-                        branches: [[name: "${ghprbActualCommit}"]],
+                        branches: [[name: "${sha1}"]], //sha1,ghprbActualCommit
                         extensions: [],
                         userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline',url: "${params.repoURL}"]]
                 ])
