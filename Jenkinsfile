@@ -4,6 +4,7 @@ pipeline {
         stage ('Debugging stage'){
             steps{
                 sh 'printenv'
+                echo "#------------------------------------------#"
                 echo "ghprbActualCommit :${env.ghprbActualCommit}"
                 echo "ghprbActualCommitAuthor ${env.ghprbActualCommitAuthor}"
                 echo "ghprbActualCommitAuthorEmail ${env.ghprbActualCommitAuthorEmail}"
@@ -15,6 +16,7 @@ pipeline {
                 echo "ghprbTargetBranch ${env.ghprbTargetBranch}"
                 echo "ghprbCommentBody ${env.ghprbCommentBody}"
                 echo "sha1 ${env.sha1}"
+                echo "#------------------------------------------#"
             }
         }
     }
