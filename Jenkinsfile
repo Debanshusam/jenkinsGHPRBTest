@@ -75,7 +75,7 @@ pipeline {
                     echo "${commitChangeset}"
                     echo '#-----------------------------#'
                 }
-                echo '#-----------------------------#'
+                echo '#--------currentBuild.changeSets-----#'
                 echo "${currentBuild.changeSets}"
             }
         }
