@@ -65,7 +65,7 @@ pipeline {
             steps{
                 checkout ([
                         $class: 'GitSCM',
-                        branches: [[name: "${sha1}"]], //sha1,ghprbActualCommit
+                        branches: [[name: "${params.sourceBranch}"]], //sha1,ghprbActualCommit
                         extensions: [],
                         userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline',url: "${params.repoURL}"]]
                 ])
@@ -98,3 +98,12 @@ pipeline {
         }
     }
 }
+
+
+//checkout([$class: 'GitSCM', 
+//branches: [[name: '*/master']], extensions: [[$class: 'ChangelogToBranch',
+//options: [compareRemote: 'https://github.com/Debanshusam/jenkinsGHPRBTest.git', compareTarget: '/main']], 
+//[$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]],
+// userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline', 
+//refspec: '+refs/pull/*:refs/remotes/origin/pr/*', 
+//url: 'https://github.com/Debanshusam/jenkinsGHPRBTest.git']]])
