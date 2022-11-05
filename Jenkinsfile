@@ -11,6 +11,7 @@ def emailReceipts = "debanshusamantaray@gmail.com"
 pipeline {
     parameters {
         booleanParam(name: 'jobDebug', defaultValue: true, description: 'enable to show environ values')
+        string(name: 'repoURL', defaultValue: "https://github.com/Debanshusam/jenkinsGHPRBTest.git", description: 'Please input the Repo URL',trim: true)
     }
     agent {label 'built-in'}
     stages {
