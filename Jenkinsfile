@@ -84,7 +84,7 @@ pipeline {
                 // To check current branch is in allowed list
                 // To check the target branch is master
                 allOf {
-                    branch pattern: "${params.sourceBranchPattern}", comparator: "REGEXP";
+                    //branch pattern: "${params.sourceBranchPattern}", comparator: "REGEXP";
                     changeRequest target: "${params.targetBranch}"; //to check the target branch is develop
                     changeRequest title: "${params.prNamingPattern}", comparator: "REGEXP" //to check the PR name is in allowed style
                 }
