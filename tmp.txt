@@ -1,0 +1,183 @@
+commit b25e5f32aaaf9aef5c7d003f1d6e2c5b4fd60f6e
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sun Nov 6 01:35:27 2022 +0530
+
+    indentation
+
+:100644 100644 2e81216 05da42d M	Jenkinsfile
+
+commit 059d651c94f3d9dc835f5a92816d13e56a84f8d7
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sun Nov 6 01:24:12 2022 +0530
+
+    def changeLogSets
+
+:100644 100644 9a6e2fd 2e81216 M	Jenkinsfile
+
+commit 1f83d76a336e14abf9779a9531a258b766a5ac7c
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sun Nov 6 00:57:37 2022 +0530
+
+    branches: [[name: "${params.sourceBranch}"]],
+
+:100644 100644 8e820ce 9a6e2fd M	Jenkinsfile
+
+commit 8b762bfed63f0efd9c9beedc150dd843c436b91e
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sun Nov 6 00:37:40 2022 +0530
+
+    replacing ghprbActualCommit ==>sha1
+
+:100644 100644 edf59af 8e820ce M	Jenkinsfile
+
+commit 8d60b280c2e37ab7e8aa1b4b308344b96e08e571
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sun Nov 6 00:26:20 2022 +0530
+
+    currentBuild.changeSets
+
+:100644 100644 9ad7aba edf59af M	Jenkinsfile
+
+commit 73f0b62c642c9707e49e0ad114be19c07529533e
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sun Nov 6 00:24:02 2022 +0530
+
+    ,trim: true
+
+:100644 100644 abcaef0 9ad7aba M	Jenkinsfile
+
+commit ab50402bd2bfff6092703abf0b5f7630a6aa2ca0
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 23:41:28 2022 +0530
+
+    temp commenting sourcebranch pattern in stage-1
+
+:100644 100644 f7c714a abcaef0 M	Jenkinsfile
+
+commit b69f6335e23969e0b31c510983edc1a2fa32d50c
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 23:35:43 2022 +0530
+
+    stage('Stage-1: Checking the target branch')
+
+:100644 100644 99f1ac6 f7c714a M	Jenkinsfile
+
+commit 7f47566ad8f4f777be8436b7d83a338be2ff838d
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 23:16:55 2022 +0530
+
+    adding echo "${currentBuild.changeSets}"
+
+:100644 100644 4d99b31 99f1ac6 M	Jenkinsfile
+
+commit c7b27dfdadaf83ce40e7adb0d910f89815ed2fa3
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 20:24:48 2022 +0530
+
+    updating repo URL
+
+:100644 100644 6d72aef 4d99b31 M	Jenkinsfile
+
+commit 7dd64ed16268f01aa70db415bceb77e34d9a647d
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 20:16:56 2022 +0530
+
+    setting debug true by default ,updating credential
+
+:100644 100644 ffe7905 6d72aef M	Jenkinsfile
+
+commit eb9e96431171bd68668fbcaf8eb04774f1dd0653
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 20:09:39 2022 +0530
+
+    adding stage ('Checkout SCM')
+
+:100644 100644 76b1c45 ffe7905 M	Jenkinsfile
+
+commit c80fcd04d63bb8fb4e51c66bcb6be1d5665187d2
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 19:56:04 2022 +0530
+
+    expression { "${params.jobDebug}" == true }
+
+:100644 100644 8320b9a 76b1c45 M	Jenkinsfile
+
+commit 1771c1a058c05b40cd8ce883343ea7e7d75c1760
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 18:46:44 2022 +0530
+
+    minor
+
+:100644 100644 af359ec 8320b9a M	Jenkinsfile
+
+commit 8476714dec1892e748ae5a06a76f7aba7ced1794
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 18:43:51 2022 +0530
+
+    updating to booleanParam
+
+:100644 100644 c398b98 af359ec M	Jenkinsfile
+
+commit e4dfcfa6bb3ed0711dba7d28b58dada5ead6f77f
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 18:42:08 2022 +0530
+
+    adding debug stage flow control
+
+:100644 100644 2a44968 c398b98 M	Jenkinsfile
+
+commit 9e2a48ec1f3ea42e312f148e727b3fff4f71a50e
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 18:16:19 2022 +0530
+
+    adding log separators
+
+:100644 100644 5805d67 2a44968 M	Jenkinsfile
+
+commit 16e96be2e64d0161a07ebafd8598c43c0dbd3a5a
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 17:46:45 2022 +0530
+
+    appending env.
+
+:100644 100644 1f9a8d9 5805d67 M	Jenkinsfile
+
+commit dcdafbb8844ce13ee136fb287c23350645afcfe4
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 17:40:49 2022 +0530
+
+    update minor typos
+
+:100644 100644 62267eb 1f9a8d9 M	Jenkinsfile
+
+commit ebda907111171d2c9b4f1a05cbe94e803a0f6b52
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 17:38:03 2022 +0530
+
+    updating jenkins file
+
+:100644 100644 0c7549d 62267eb M	Jenkinsfile
+
+commit a6c8dd4dd532a47495bc3a1fa16fbdfcaec75861
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 17:20:46 2022 +0530
+
+    updating  echo "${env.BRANCH_NAME}"
+
+:100644 100644 690c733 0c7549d M	Jenkinsfile
+
+commit 7bea95beda55631e124f4baacc5a001f3f596de9
+Author: Debanshusam <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 16:29:18 2022 +0530
+
+    initial commit
+
+:000000 100644 0000000 690c733 A	Jenkinsfile
+
+commit c96d60990ab6add79cd4235070b712803b22ae79
+Author: Debanshu Samantaray <42534802+Debanshusam@users.noreply.github.com>
+Date:   Sat Nov 5 16:12:59 2022 +0530
+
+    Initial commit
+
+:000000 100644 0000000 2b22088 A	README.md

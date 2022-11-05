@@ -71,11 +71,11 @@ pipeline {
                 ])
                 script{
                     def commitChangeset = sh(returnStdout: true, script: 'git diff-tree --no-commit-id --name-status -r HEAD').trim()
-                    def whatchanged = sh(returnStdout: true, script: 'git whatchanged HEAD').trim()git whatchanged 
+                    //def whatchanged = sh(returnStdout: true, script: "git whatchanged ${env.sha1}").trim()git whatchanged 
                     echo '#--------- commitChangeset --------------------#'
                     echo "${commitChangeset}"
                     echo '#--------whatchanged-------------#'
-                    echo "${whatchanged}"
+                    //echo "${whatchanged}"
                     echo '#-----------------------------#'
                     echo '#--------currentBuild.changeSets-----#'
                     def changeLogSets = currentBuild.changeSets
