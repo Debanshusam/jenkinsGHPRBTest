@@ -12,7 +12,7 @@ pipeline {
     parameters {
         string(name: 'jobDebug',
         defaultValue: 'true', //'false'
-        description: 'enable to show environment values')
+        description: 'enable to show environment values',trim: true)
         string(name: 'targetBranch',
         defaultValue: "${ghprbTargetBranch}",
         description: 'Please input the Target branch',trim: true)
@@ -84,7 +84,7 @@ pipeline {
                 // To check current branch is in allowed list
                 // To check the target branch is master
                 allOf {
-                    //branch pattern: "${params.sourceBranchPattern}", comparator: "REGEXP";
+                    branch pattern: "${params.sourceBranchPattern}", comparator: "REGEXP";
                     changeRequest target: "${params.targetBranch}"; //to check the target branch is develop
                     changeRequest title: "${params.prNamingPattern}", comparator: "REGEXP" //to check the PR name is in allowed style
                 }
