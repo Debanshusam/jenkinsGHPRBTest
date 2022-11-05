@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage ('Debugging stage'){
             when{
-                expression { ${params.jobDebug} == true }
+                expression { "${params.jobDebug}" == true }
             }
             steps{
                 sh 'printenv'
