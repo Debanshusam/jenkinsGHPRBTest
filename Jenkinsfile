@@ -97,7 +97,7 @@ pipeline {
                     $class: 'GitSCM', 
                     branches: [[name: "${params.sourceBranch}"]],
                     extensions: [],
-                    userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline', refspec: "+refs/heads/master:refs/remotes/origin/master +refs/heads/develop:refs/remotes/origin/develop +refs/heads/${params.sourceBranch}:refs/remotes/origin/${params.sourceBranch}", url: "${params.repoURL}"]]
+                    userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline', refspec: "+refs/heads/main:refs/remotes/origin/main +refs/heads/develop:refs/remotes/origin/develop +refs/heads/${params.sourceBranch}:refs/remotes/origin/${params.sourceBranch}", url: "${params.repoURL}"]]
                 ])
                 echo " Branches available locally..."
                 sh "git branch "
