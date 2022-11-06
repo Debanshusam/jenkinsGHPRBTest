@@ -78,8 +78,8 @@ pipeline {
                 def  prNamingPatternCheckFlag = sh (returnStdout: true, script:"""if [[ "${env.ghprbPullTitle}" == "${prNamingPattern}" ]]; then echo "matched";else echo "false";fi""").trim()
                 echo "prNamingPatternCheckFlag ==> ${prNamingPatternCheckFlag} ==> ${env.ghprbPullTitle}"
 
-                //error("Aborting the build.")
-                //currentBuild.result  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'SUCCESS' : 'FAILURE')
+                //error("Aborting the build.") //Commented Temporarily
+                //currentBuild.result  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'SUCCESS' : 'FAILURE') //Commented Temporarily
                 
                 }
             }
@@ -105,7 +105,7 @@ pipeline {
                     echo '#--------commitGitDiff-----#'
                     echo "${commitGitDiff}"
                     //redirect the commitGitDiff into a log file
-                    sh 'echo "${commitGitDiff}" > commitGitDiff.log'
+                    sh "echo "${commitGitDiff}" > commitGitDiff.log"
                     echo 'commitGitDiff.log file generated ..... '
                     //check if the field contains any changes to specific file extensions using awk command and set a variable flag to  "build-only" /"build-&-provision"
                     triggerDownstreamFlag=sh(returnStdout: true, script:'''
