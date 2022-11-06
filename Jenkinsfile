@@ -1,6 +1,7 @@
 //----------------------
 def downStreamJob1='Build Artifacts'
 def downStreamJob2='2. Project provisioning'
+def triggerDownstreamFlag='none' //"build-only" /"build-&-provision" / "skip"
 //-----------------------
 // job('US-Staging-Check')
 def failureEmailsubject = "Pull Request Build Failed : ${ghprbPullTitle} "
@@ -90,24 +91,34 @@ pipeline {
                         extensions: [],
                         userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline',url: "${params.repoURL}"]]
                 ])
+            }
+        }
+        stage('Stage-3: Genearting and analysing changes on branch...'){
+            steps{
                 script{
                     echo " Generating the git diff log to find the list of file modified...."
                     def commitChangeset = sh(returnStdout: true, script: 'git diff-tree --no-commit-id --name-status -r HEAD').trim()
                     def commitGitDiff = sh(returnStdout: true, script: 'git diff --name-only $(git merge-base --fork-point "${gitForkPoint}")').trim() // this generates the list of modfied files on the branch since it was branched from main/master/origin branch
-                    
                     echo '#--------- commitChangeset --------------------#'
                     echo "${commitChangeset}"
                     echo '#--------commitGitDiff-----#'
                     echo "${commitGitDiff}"
                     //redirect the commitGitDiff into a log file
                     sh 'echo "${commitGitDiff}" > commitGitDiff.log'
+                    echo 'commitGitDiff.log file generated ..... '
                     //check if the field contains any changes to specific file extensions using awk command and set a variable flag to  "build-only" /"build-&-provision"
+                    triggerDownstreamFlag=sh(returnStdout: true, script:'
+                    awk 'BEGIN{FLAG="";b1regex1="[a-zA-Z0-9]*[.](py)";b1regex2="[a-zA-Z0-9]*[.](Dockerfile)";b1regex3="[a-zA-Z0-9]*[.](R)";b1regex4="[a-zA-Z0-9]*[.](Rprofile)";b1regex5="[jJ]enkinsfile*"; \
+                    b2regex6="[a-zA-Z0-9]*[.](sql)";b2regex7="[a-zA-Z0-9]*[.](tf)";b2regex8="[a-zA-Z0-9]*[.](go)";b2regex9="[a-zA-Z0-9]*[.](sh)";b2regex10="[a-zA-Z0-9]*[.](y[a]{0,1}ml)";}{ \
+                    if ($0 ~ b1regex1 || $0 ~ b1regex2 || $0 ~ b1regex3 || $0 ~ b1regex4 || $0 ~ b1regex5)\
+                    print $0 ,FLAG="build-only" ;\
+                    if ($0 ~ b2regex6 || $0 ~ b2regex7 || $0 ~ b2regex8 || $0 ~ b2regex9 || $0 ~ b2regex10)\
+                       print $0 , FLAG="build-&-provision" ;\
+                    }
+                    END{print FLAG}' commitGitDiff.log;').trim()
                 }
+                echo " triggerDownstreamFlag ==> ${triggerDownstreamFlag}"
             }
-        }
-
-        stage('3'){
-            
         }
     }
 }
