@@ -37,10 +37,14 @@ pipeline {
         string(name: 'repoURL',
         defaultValue: 'https://github.com/Debanshusam/jenkinsGHPRBTest.git',
         description: 'Please input the Repo URL',trim: true)
+        string(name: 'gitForkPoint',
+        defaultValue: 'main',
+        description: 'this generates the list of modfied files on the branch since it was branched from fork point',
+        trim: true)
     }
     agent { label 'built-in' } // 'master'
     stages {
-        stage('Stage-DEBUG: Debugging Environment and Plugin variables'){
+        stage('Stage-DEBUGGING: Debugging Environment and Plugin variables'){
             when{
                 expression { "${params.jobDebug}" == 'true' }
             }
@@ -61,7 +65,24 @@ pipeline {
                 echo "#----------------------------------------------------------------------#"
             }
         }
-        stage ('Checkout SCM'){
+        stage('Stage-1: Checking the branch and PR naming convention..') {
+            steps {
+                script{
+                 def  targetBranchCheckFlag = sh (returnStdout: true, script:'if [[ "${env.ghprbTargetBranch}" == 'develop' ]]; then echo 'matched';else echo 'false';fi').trim()
+                 echo "targetBranchCheckFlag ==> ${targetBranchCheckFlag} ==> ${env.ghprbTargetBranch}"
+
+                 def  sourceBranchPatternCheckFlag = sh (returnStdout: true, script:'if [[ "${env.ghprbSourceBranch}" =~ "${sourceBranchPattern}" ]]; then echo 'matched';else echo 'false';fi').trim()
+                 echo "sourceBranchPatternCheckFlag ==> ${sourceBranchPatternCheckFlag} ==> ${env.ghprbSourceBranch}"
+
+                def  prNamingPatternCheckFlag = sh (returnStdout: true, script:'if [[ "${env.ghprbPullTitle}" == "${prNamingPattern}" ]]; then echo 'matched';else echo 'false';fi').trim()
+                echo "prNamingPatternCheckFlag ==> ${prNamingPatternCheckFlag} ==> ${env.ghprbPullTitle}"
+
+                currentBuild.result  = ("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'SUCCESS' : 'ABORTED')
+                error("Aborting the build.")
+                }
+            }
+        }
+        stage ('Stage-2: Checkout SCM'){
             steps{
                 checkout ([
                         $class: 'GitSCM',
@@ -70,47 +91,23 @@ pipeline {
                         userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline',url: "${params.repoURL}"]]
                 ])
                 script{
+                    echo " Generating the git diff log to find the list of file modified...."
                     def commitChangeset = sh(returnStdout: true, script: 'git diff-tree --no-commit-id --name-status -r HEAD').trim()
-                    //def whatchanged = sh(returnStdout: true, script: "git whatchanged ${env.sha1}").trim()git whatchanged 
+                    def commitGitDiff = sh(returnStdout: true, script: 'git diff --name-only $(git merge-base --fork-point "${gitForkPoint}")').trim() // this generates the list of modfied files on the branch since it was branched from main/master/origin branch
+                    
                     echo '#--------- commitChangeset --------------------#'
                     echo "${commitChangeset}"
-                    echo '#--------whatchanged-------------#'
-                    //echo "${whatchanged}"
-                    echo '#-----------------------------#'
-                    echo '#--------currentBuild.changeSets-----#'
-                    def changeLogSets = currentBuild.changeSets
-                    for (int i = 0; i < changeLogSets.size(); i++) {
-                    def entries = changeLogSets[i].items
-                    for (int j = 0; j < entries.length; j++) {
-                       def entry = entries[j]
-                       //echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
-                       def files = new ArrayList(entry.affectedFiles)
-                       for (int k = 0; k < files.size(); k++) {
-                           def file = files[k]
-                           //echo " ${file.editType.name} ${file.path}"
-                           echo " ${file.path}" // only display the file edited
-                       }
-                    }
+                    echo '#--------commitGitDiff-----#'
+                    echo "${commitGitDiff}"
+                    //redirect the commitGitDiff into a log file
+                    sh 'echo "${commitGitDiff}" > commitGitDiff.log'
+                    //check if the field contains any changes to specific file extensions using awk command and set a variable flag to  "build-only" /"build-&-provision"
                 }
             }
-            }
-            }
-        stage('Stage-1: Checking the target branch') {
-            when {
-                // To check current branch is in allowed list
-                // To check the target branch is master
-                allOf {
-                    branch pattern: "${params.sourceBranchPattern}", comparator: "REGEXP";
-                    changeRequest target: "${params.targetBranch}"; //to check the target branch is develop
-                    changeRequest title: "${params.prNamingPattern}", comparator: "REGEXP" //to check the PR name is in allowed style
-                }
-            }
-            steps {
-                echo " Correct branch ${params.sourceBranch} with pattern: ${params.sourceBranchPattern}"
-                echo "changeRequest target: ${params.targetBranch}"
-                echo "Correct PR naming: ${params.prName}"
-                echo "Stage-1: End of check for  ${params.targetBranch} status ${currentBuild.Result}"
-            }
+        }
+
+        stage('3'){
+            
         }
     }
 }
