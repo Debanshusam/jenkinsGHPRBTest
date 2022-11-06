@@ -101,10 +101,10 @@ pipeline {
                 ])
                 echo " Branches available locally..."
                 sh "git branch "
-                echo "Checking out to ${params.sourceBranch}..."
-                sh "git checkout origin/${params.sourceBranch}"
-                echo "Branch status..."
-                sh "git branch "
+                //echo "Checking out to ${params.sourceBranch}..."
+                //sh "git checkout origin/${params.sourceBranch}"
+                //echo "Branch status..."
+                //sh "git branch "
             }
         }
         stage('Stage-3: Generating and analysing changes on branch...'){
@@ -118,8 +118,8 @@ pipeline {
                     echo '#--------commitGitDiff-----#'
                     echo "${commitGitDiff}"
                     //redirect the commitGitDiff into a log file
-                    sh "echo "${commitGitDiff}" > commitGitDiff.log"
-                    echo 'commitGitDiff.log file generated ..... '
+                    sh "echo ${commitGitDiff} > commitGitDiff.log"
+                    echo 'commitGitDiff.log file generated,checking number of modified files ..... '
                     sh "cat commitGitDiff.log| wc -l"
                     //check if the field contains any changes to specific file extensions using awk command and set a variable flag to  "build-only" /"build-&-provision"
                     triggerDownstreamFlag=sh(returnStdout: true, script:'''
