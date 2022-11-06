@@ -86,13 +86,6 @@ pipeline {
         }
         stage ('Stage-2: Checkout SCM'){
             steps{
-                /*
-                checkout ([
-                        $class: 'GitSCM',
-                        branches: [[name: "${sha1}"]], //sha1 ,ghprbActualCommit,params.sourceBranch
-                        extensions: [],
-                        userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline',url: "${params.repoURL}"]]
-                ])*/
                 checkout([
                     $class: 'GitSCM', 
                     branches: [[name: "${params.sourceBranch}"]],
@@ -135,6 +128,9 @@ pipeline {
                 }
                 echo " triggerDownstreamFlag ==> ${triggerDownstreamFlag}"
             }
+        }
+        stage('Stage-4: Checking status to trigger downstream Job ....'){
+            
         }
     }
 }
