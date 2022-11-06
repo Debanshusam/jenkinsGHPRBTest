@@ -1,7 +1,7 @@
 //----------------------
 def downStreamJob1='Build Artifacts'
 def downStreamJob2='2. Project provisioning'
-def triggerDownstreamFlag='NO DATA SET' //"build-only" /"build-&-provision" / "skip"
+def triggerDownstreamFlag='NO DATA SET' //"build-only" /"build-&-provision" / "skip-no-validChanges"
 //-----------------------
 // job('US-Staging-Check')
 def failureEmailsubject = "Pull Request Build Failed : ${ghprbPullTitle} "
@@ -80,7 +80,6 @@ pipeline {
 
                 //error("Aborting the build.") //Commented Temporarily
                 //currentBuild.result  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'SUCCESS' : 'FAILURE') //Commented Temporarily
-                
                 }
             }
         }
@@ -120,17 +119,34 @@ pipeline {
                     awk 'BEGIN{FLAG="";b1regex1="[a-zA-Z0-9]*[.](py)";b1regex2="[a-zA-Z0-9]*[.](Dockerfile)";b1regex3="[a-zA-Z0-9]*[.](R)";b1regex4="[a-zA-Z0-9]*[.](Rprofile)";b1regex5="[jJ]enkinsfile*"; \
                     b2regex6="[a-zA-Z0-9]*[.](sql)";b2regex7="[a-zA-Z0-9]*[.](tf)";b2regex8="[a-zA-Z0-9]*[.](go)";b2regex9="[a-zA-Z0-9]*[.](sh)";b2regex10="[a-zA-Z0-9]*[.](y[a]{0,1}ml)";}{ \
                     if ($0 ~ b1regex1 || $0 ~ b1regex2 || $0 ~ b1regex3 || $0 ~ b1regex4 || $0 ~ b1regex5)\
-                    print $0 ,FLAG="build-only" ;\
+                    FLAG="build-only" ;\
                     if ($0 ~ b2regex6 || $0 ~ b2regex7 || $0 ~ b2regex8 || $0 ~ b2regex9 || $0 ~ b2regex10)\
-                       print $0 , FLAG="build-&-provision" ;\
+                    FLAG="build-&-provision" ;\
+                    if (FLAG == "")\
+                    FLAG="skip-no-validChanges" ;\
                     }
                     END{print FLAG}' commitGitDiff.log;''').trim()
                 }
-                echo " triggerDownstreamFlag ==> ${triggerDownstreamFlag}"
+                echo " ###>>>> triggerDownstreamFlag ==> ${triggerDownstreamFlag}"
             }
         }
         stage('Stage-4: Checking status to trigger downstream Job ....'){
-            
+            steps{
+                scripts{
+                    if ("${triggerDownstreamFlag}" == "build-&-provision"){
+                        //trigger downstream job-1
+                        //trigger downstream job-2
+                    }
+
+                    if ("${triggerDownstreamFlag}" == "build-only"){
+                        //trigger downstream job-1 only
+                    }
+                    if("${triggerDownstreamFlag}" == "skip-no-validChanges"){
+                        echo "#--------- No valid changelog found !! ,Downstream build-&-provision job skipped ---------# "
+                    } 
+                }
+            }
         }
     }
 }
+
