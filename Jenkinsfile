@@ -78,8 +78,8 @@ pipeline {
                 def  prNamingPatternCheckFlag = sh (returnStdout: true, script:"""if [[ "${env.ghprbPullTitle}" == "${prNamingPattern}" ]]; then echo "matched";else echo "false";fi""").trim()
                 echo "prNamingPatternCheckFlag ==> ${prNamingPatternCheckFlag} ==> ${env.ghprbPullTitle}"
 
-                error("Aborting the build.")
-                currentBuild.result  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'SUCCESS' : 'FAILURE')
+                //error("Aborting the build.")
+                //currentBuild.result  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'SUCCESS' : 'FAILURE')
                 
                 }
             }
