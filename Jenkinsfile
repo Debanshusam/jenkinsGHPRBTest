@@ -1,7 +1,7 @@
 //----------------------
 def downStreamJob1='Build Artifacts'
 def downStreamJob2='2. Project provisioning'
-def triggerDownstreamFlag='none' //"build-only" /"build-&-provision" / "skip"
+def triggerDownstreamFlag='NO DATA SET' //"build-only" /"build-&-provision" / "skip"
 //-----------------------
 // job('US-Staging-Check')
 def failureEmailsubject = "Pull Request Build Failed : ${ghprbPullTitle} "
@@ -39,7 +39,7 @@ pipeline {
         defaultValue: 'https://github.com/Debanshusam/jenkinsGHPRBTest.git',
         description: 'Please input the Repo URL',trim: true)
         string(name: 'gitForkPoint',
-        defaultValue: 'main',
+        defaultValue: 'origin/develop',
         description: 'this generates the list of modfied files on the branch since it was branched from fork point',
         trim: true)
     }
@@ -86,12 +86,25 @@ pipeline {
         }
         stage ('Stage-2: Checkout SCM'){
             steps{
+                /*
                 checkout ([
                         $class: 'GitSCM',
-                        branches: [[name: "${params.sourceBranch}"]], //sha1,ghprbActualCommit
+                        branches: [[name: "${sha1}"]], //sha1 ,ghprbActualCommit,params.sourceBranch
                         extensions: [],
                         userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline',url: "${params.repoURL}"]]
+                ])*/
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: "${params.sourceBranch}"]],
+                    extensions: [],
+                    userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline', refspec: "+refs/heads/master:refs/remotes/origin/master +refs/heads/develop:refs/remotes/origin/develop +refs/heads/${params.sourceBranch}:refs/remotes/origin/${params.sourceBranch}", url: "${params.repoURL}"]]
                 ])
+                echo " Branches available locally..."
+                sh "git branch "
+                echo "Checking out to ${params.sourceBranch}..."
+                sh "git checkout origin/${params.sourceBranch}"
+                echo "Branch status..."
+                sh "git branch "
             }
         }
         stage('Stage-3: Generating and analysing changes on branch...'){
@@ -107,6 +120,7 @@ pipeline {
                     //redirect the commitGitDiff into a log file
                     sh "echo "${commitGitDiff}" > commitGitDiff.log"
                     echo 'commitGitDiff.log file generated ..... '
+                    sh "cat commitGitDiff.log| wc -l"
                     //check if the field contains any changes to specific file extensions using awk command and set a variable flag to  "build-only" /"build-&-provision"
                     triggerDownstreamFlag=sh(returnStdout: true, script:'''
                     awk 'BEGIN{FLAG="";b1regex1="[a-zA-Z0-9]*[.](py)";b1regex2="[a-zA-Z0-9]*[.](Dockerfile)";b1regex3="[a-zA-Z0-9]*[.](R)";b1regex4="[a-zA-Z0-9]*[.](Rprofile)";b1regex5="[jJ]enkinsfile*"; \
