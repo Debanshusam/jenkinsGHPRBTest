@@ -99,7 +99,7 @@ pipeline {
                 script{
                     echo " Generating the git diff log to find the list of file modified...."
                     def commitChangeset = sh(returnStdout: true, script: 'git diff-tree --no-commit-id --name-status -r HEAD').trim()
-                    def commitGitDiff = sh(returnStdout: true, script: "git diff --name-only $(git merge-base --fork-point "${gitForkPoint}")").trim() // this generates the list of modfied files on the branch since it was branched from main/master/origin branch
+                    def commitGitDiff = sh(returnStdout: true, script: """git diff --name-only \$(git merge-base --fork-point "${gitForkPoint}")""").trim() // this generates the list of modfied files on the branch since it was branched from main/master/origin branch
                     echo '#--------- commitChangeset --------------------#'
                     echo "${commitChangeset}"
                     echo '#--------commitGitDiff-----#'
