@@ -69,13 +69,13 @@ pipeline {
         stage('Stage-1: Checking the branch and PR naming convention..') {
             steps {
                 script{
-                 def  targetBranchCheckFlag = sh (returnStdout: true, script:'if [[ "${env.ghprbTargetBranch}" == "develop" ]]; then echo "matched";else echo "false";fi').trim()
+                 def  targetBranchCheckFlag = sh (returnStdout: true, script:'''if [[ "${env.ghprbTargetBranch}" == "develop" ]]; then echo "matched";else echo "false";fi''').trim()
                  echo "targetBranchCheckFlag ==> ${targetBranchCheckFlag} ==> ${env.ghprbTargetBranch}"
 
-                 def  sourceBranchPatternCheckFlag = sh (returnStdout: true, script:'if [[ "${env.ghprbSourceBranch}" =~ "${sourceBranchPattern}" ]]; then echo "matched";else echo "false";fi').trim()
+                 def  sourceBranchPatternCheckFlag = sh (returnStdout: true, script:'''if [[ "${env.ghprbSourceBranch}" =~ "${sourceBranchPattern}" ]]; then echo "matched";else echo "false";fi''').trim()
                  echo "sourceBranchPatternCheckFlag ==> ${sourceBranchPatternCheckFlag} ==> ${env.ghprbSourceBranch}"
 
-                def  prNamingPatternCheckFlag = sh (returnStdout: true, script:'if [[ "${env.ghprbPullTitle}" == "${prNamingPattern}" ]]; then echo "matched";else echo "false";fi').trim()
+                def  prNamingPatternCheckFlag = sh (returnStdout: true, script:'''if [[ "${env.ghprbPullTitle}" == "${prNamingPattern}" ]]; then echo "matched";else echo "false";fi''').trim()
                 echo "prNamingPatternCheckFlag ==> ${prNamingPatternCheckFlag} ==> ${env.ghprbPullTitle}"
 
                 currentBuild.result  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'SUCCESS' : 'ABORTED')
