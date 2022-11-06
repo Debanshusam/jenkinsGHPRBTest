@@ -69,16 +69,16 @@ pipeline {
         stage('Stage-1: Checking the branch and PR naming convention..') {
             steps {
                 script{
-                 def  targetBranchCheckFlag = sh (returnStdout: true, script:'if [[ "${env.ghprbTargetBranch}" == 'develop' ]]; then echo 'matched';else echo 'false';fi').trim()
+                 def  targetBranchCheckFlag = sh (returnStdout: true, script:'if [[ "${env.ghprbTargetBranch}" == "develop" ]]; then echo "matched";else echo "false";fi').trim()
                  echo "targetBranchCheckFlag ==> ${targetBranchCheckFlag} ==> ${env.ghprbTargetBranch}"
 
-                 def  sourceBranchPatternCheckFlag = sh (returnStdout: true, script:'if [[ "${env.ghprbSourceBranch}" =~ "${sourceBranchPattern}" ]]; then echo 'matched';else echo 'false';fi').trim()
+                 def  sourceBranchPatternCheckFlag = sh (returnStdout: true, script:'if [[ "${env.ghprbSourceBranch}" =~ "${sourceBranchPattern}" ]]; then echo "matched";else echo "false";fi').trim()
                  echo "sourceBranchPatternCheckFlag ==> ${sourceBranchPatternCheckFlag} ==> ${env.ghprbSourceBranch}"
 
-                def  prNamingPatternCheckFlag = sh (returnStdout: true, script:'if [[ "${env.ghprbPullTitle}" == "${prNamingPattern}" ]]; then echo 'matched';else echo 'false';fi').trim()
+                def  prNamingPatternCheckFlag = sh (returnStdout: true, script:'if [[ "${env.ghprbPullTitle}" == "${prNamingPattern}" ]]; then echo "matched";else echo "false";fi').trim()
                 echo "prNamingPatternCheckFlag ==> ${prNamingPatternCheckFlag} ==> ${env.ghprbPullTitle}"
 
-                currentBuild.result  = ("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'SUCCESS' : 'ABORTED')
+                currentBuild.result  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'SUCCESS' : 'ABORTED')
                 error("Aborting the build.")
                 }
             }
@@ -107,7 +107,7 @@ pipeline {
                     sh 'echo "${commitGitDiff}" > commitGitDiff.log'
                     echo 'commitGitDiff.log file generated ..... '
                     //check if the field contains any changes to specific file extensions using awk command and set a variable flag to  "build-only" /"build-&-provision"
-                    triggerDownstreamFlag=sh(returnStdout: true, script:'
+                    triggerDownstreamFlag=sh(returnStdout: true, script:'''
                     awk 'BEGIN{FLAG="";b1regex1="[a-zA-Z0-9]*[.](py)";b1regex2="[a-zA-Z0-9]*[.](Dockerfile)";b1regex3="[a-zA-Z0-9]*[.](R)";b1regex4="[a-zA-Z0-9]*[.](Rprofile)";b1regex5="[jJ]enkinsfile*"; \
                     b2regex6="[a-zA-Z0-9]*[.](sql)";b2regex7="[a-zA-Z0-9]*[.](tf)";b2regex8="[a-zA-Z0-9]*[.](go)";b2regex9="[a-zA-Z0-9]*[.](sh)";b2regex10="[a-zA-Z0-9]*[.](y[a]{0,1}ml)";}{ \
                     if ($0 ~ b1regex1 || $0 ~ b1regex2 || $0 ~ b1regex3 || $0 ~ b1regex4 || $0 ~ b1regex5)\
@@ -115,7 +115,7 @@ pipeline {
                     if ($0 ~ b2regex6 || $0 ~ b2regex7 || $0 ~ b2regex8 || $0 ~ b2regex9 || $0 ~ b2regex10)\
                        print $0 , FLAG="build-&-provision" ;\
                     }
-                    END{print FLAG}' commitGitDiff.log;').trim()
+                    END{print FLAG}' commitGitDiff.log;''').trim()
                 }
                 echo " triggerDownstreamFlag ==> ${triggerDownstreamFlag}"
             }
