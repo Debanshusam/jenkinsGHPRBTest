@@ -118,9 +118,10 @@ pipeline {
                     echo '#--------commitGitDiff-----#'
                     echo "${commitGitDiff}"
                     //redirect the commitGitDiff into a log file
-                    sh "echo ${commitGitDiff} > commitGitDiff.log"
+                    writeFile (file: "${WORKSPACE}/commitGitDiff.log", text: "${commitGitDiff}")
+                    fileExists 'commitGitDiff.log'
                     echo 'commitGitDiff.log file generated,checking number of modified files ..... '
-                    sh "cat commitGitDiff.log| wc -l"
+                    sh """cat "${WORKSPACE}/commitGitDiff.log"| wc -l"""
                     //check if the field contains any changes to specific file extensions using awk command and set a variable flag to  "build-only" /"build-&-provision"
                     triggerDownstreamFlag=sh(returnStdout: true, script:'''
                     awk 'BEGIN{FLAG="";b1regex1="[a-zA-Z0-9]*[.](py)";b1regex2="[a-zA-Z0-9]*[.](Dockerfile)";b1regex3="[a-zA-Z0-9]*[.](R)";b1regex4="[a-zA-Z0-9]*[.](Rprofile)";b1regex5="[jJ]enkinsfile*"; \
