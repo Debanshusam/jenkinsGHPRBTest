@@ -138,7 +138,7 @@ pipeline {
                         def downStreamJob1ReturnValue = build job: "${downStreamJob1}", parameters: [
                         [$class: 'StringParametervalue', name: "fortifyScanRequired", value: true], // pending update
                         [$class: 'StringParametervalue', name: "twistlockScanRequired", value: true], // pending update
-                        [$class: 'StringParametervalue', name: "ignoreVulnerableImages", value: true] // pending update
+                        [$class: 'StringParametervalue', name: "ignoreVulnerableImages", value: true], // pending update
                         [$class: 'booleanParam', name: "Trigger-Provision-Job", value: true] 
                         ],
                         propagate : true,
@@ -164,7 +164,7 @@ pipeline {
                         def downStreamJob1ReturnValue = build job: "${downStreamJob1}", parameters: [
                         [$class: 'StringParametervalue', name: "fortifyScanRequired", value: true], // pending update
                         [$class: 'StringParametervalue', name: "twistlockScanRequired", value: true], // pending update
-                        [$class: 'StringParametervalue', name: "ignoreVulnerableImages", value: true] // pending update
+                        [$class: 'StringParametervalue', name: "ignoreVulnerableImages", value: true], // pending update
                         [$class: 'booleanParam', name: "Trigger-Provision-Job", value: false] 
                         ],
                         propagate : true,
