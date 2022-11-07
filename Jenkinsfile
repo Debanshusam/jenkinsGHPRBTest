@@ -132,7 +132,7 @@ pipeline {
         }
         stage('Stage-4: Checking status to trigger downstream Job ....'){
             steps{
-                scripts{
+                script{
                     if ("${triggerDownstreamFlag}" == "build-&-provision"){
                         //trigger downstream job-1 ==> build
                         def downStreamJob1ReturnValue = build job: "${downStreamJob1}", parameters: [
@@ -156,7 +156,7 @@ pipeline {
                             wait : true
                     }
                 }
-                scripts{    
+                script{    
                     if ("${triggerDownstreamFlag}" == "build-only"){
                         //trigger downstream job-1 only ==> build 
                         def downStreamJob1ReturnValue = build job: "${downStreamJob1}", parameters: [
@@ -169,7 +169,7 @@ pipeline {
                         wait : true
                     }
                 }
-                scripts{
+                script{
                     if ( "${triggerDownstreamFlag}" == "skip-no-validChanges" ){
                         echo '#--------- No valid changelog found !! ,Downstream build-&-provision jobs skipped ---------#'
                     } 
