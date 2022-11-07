@@ -136,11 +136,10 @@ pipeline {
                     if ("${triggerDownstreamFlag}" == "build-&-provision"){
                         //trigger downstream job-1 ==> build
                         def downStreamJob1ReturnValue = build job: "${downStreamJob1}", parameters: [
-                        [$class: 'StringParametervalue', name: "fortifyScanRequired", value: true], // pending update
-                        [$class: 'StringParametervalue', name: "twistlockScanRequired", value: true], // pending update
-                        [$class: 'StringParametervalue', name: "ignoreVulnerableImages", value: true], // pending update
-                        [$class: 'booleanParam', name: "Trigger-Provision-Job", value: true] 
-                        ],
+                        string(name: 'fortifyScanRequired', value: 'true'), // pending update
+                        string(name: 'twistlockScanRequired', value: 'true'), // pending update
+                        string(name: 'ignoreVulnerableImages', value: 'true'), // pending update
+                        booleanParam(name: 'Trigger-Provision-Job', value: true)],
                         propagate : true,
                         quietPeriod : 5,
                         wait : true
@@ -162,11 +161,10 @@ pipeline {
                     if ("${triggerDownstreamFlag}" == "build-only"){
                         //trigger downstream job-1 only ==> build 
                         def downStreamJob1ReturnValue = build job: "${downStreamJob1}", parameters: [
-                        [$class: 'StringParametervalue', name: "fortifyScanRequired", value: true], // pending update
-                        [$class: 'StringParametervalue', name: "twistlockScanRequired", value: true], // pending update
-                        [$class: 'StringParametervalue', name: "ignoreVulnerableImages", value: true], // pending update
-                        [$class: 'booleanParam', name: "Trigger-Provision-Job", value: false] 
-                        ],
+                        string(name: 'fortifyScanRequired', value: 'true'), // pending update
+                        string(name: 'twistlockScanRequired', value: 'true'), // pending update
+                        string(name: 'ignoreVulnerableImages', value: 'true'), // pending update
+                        booleanParam(name: 'Trigger-Provision-Job', value: false)],
                         propagate : true,
                         quietPeriod : 5,
                         wait : true
