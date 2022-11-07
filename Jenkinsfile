@@ -139,12 +139,14 @@ pipeline {
                         [$class: 'StringParametervalue', name: "fortifyScanRequired", value: true], // pending update
                         [$class: 'StringParametervalue', name: "twistlockScanRequired", value: true], // pending update
                         [$class: 'StringParametervalue', name: "ignoreVulnerableImages", value: true] // pending update
+                        [$class: 'booleanParam', name: "Trigger-Provision-Job", value: true] 
                         ],
                         propagate : true,
                         quietPeriod : 5,
                         wait : true
 
                         //trigger downstream job-2 ==> provision only when Build is success
+                        /*
                         def downStreamJob2ReturnValue = build job: "${downStreamJob2}", parameters: [
                             string(name: 'version',
                             defaultValue: "${Build_Version}",
@@ -153,7 +155,7 @@ pipeline {
                             ],
                             propagate : true,
                             quietPeriod : 5,
-                            wait : true
+                            wait : true*/
                     }
                 }
                 script{    
@@ -163,6 +165,7 @@ pipeline {
                         [$class: 'StringParametervalue', name: "fortifyScanRequired", value: true], // pending update
                         [$class: 'StringParametervalue', name: "twistlockScanRequired", value: true], // pending update
                         [$class: 'StringParametervalue', name: "ignoreVulnerableImages", value: true] // pending update
+                        [$class: 'booleanParam', name: "Trigger-Provision-Job", value: false] 
                         ],
                         propagate : true,
                         quietPeriod : 5,
