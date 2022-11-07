@@ -145,18 +145,18 @@ pipeline {
                         wait : true
 
                         //trigger downstream job-2 ==> provision only when Build is success
-                        if ("${triggerDownstreamFlag.result}" == "SUCCESS"){
-                            def downStreamJob2ReturnValue = build job: "${downStreamJob2}", parameters: [
-                                string(name: 'version',
-                                defaultValue: "${Build_Version}",
-                                description: 'REQUIRED Version of release to deploy. Single version for all artifacts (images, helm chart, dataproc init actions).',
-                                trim: true)
-                                ],
-                                propagate : true,
-                                quietPeriod : 5,
-                                wait : true
-                        }
+                        def downStreamJob2ReturnValue = build job: "${downStreamJob2}", parameters: [
+                            string(name: 'version',
+                            defaultValue: "${Build_Version}",
+                            description: 'REQUIRED Version of release to deploy. Single version for all artifacts (images, helm chart, dataproc init actions).',
+                            trim: true)
+                            ],
+                            propagate : true,
+                            quietPeriod : 5,
+                            wait : true
                     }
+                }
+                scripts{    
                     if ("${triggerDownstreamFlag}" == "build-only"){
                         //trigger downstream job-1 only ==> build 
                         def downStreamJob1ReturnValue = build job: "${downStreamJob1}", parameters: [
@@ -168,8 +168,10 @@ pipeline {
                         quietPeriod : 5,
                         wait : true
                     }
-                    if("${triggerDownstreamFlag}" == "skip-no-validChanges"){
-                        echo "#--------- No valid changelog found !! ,Downstream build-&-provision jobs skipped ---------# "
+                }
+                scripts{
+                    if ( "${triggerDownstreamFlag}" == "skip-no-validChanges" ){
+                        echo '#--------- No valid changelog found !! ,Downstream build-&-provision jobs skipped ---------#'
                     } 
                 }
             }
