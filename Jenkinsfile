@@ -13,7 +13,7 @@ def jobProgressFlag = "true"
 pipeline {
     parameters {
         string(name: 'jobDebug',
-        defaultValue: 'true', //'false'
+        defaultValue: 'false', //'false'
         description: 'enable to show environment values',trim: true)
         string(name: 'targetBranch',
         defaultValue: "${ghprbTargetBranch}",
