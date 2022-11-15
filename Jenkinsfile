@@ -87,14 +87,16 @@ pipeline {
                     echo "prNamingPatternCheckFlag ==> ${prNamingPatternCheckFlag} ==> ${env.ghprbPullTitle}"
                     //------------------------------------
                     //error("Aborting the build.") //Commented Temporarily
-                    jobProgressFlag  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'true' : Null) //Commented Temporarily
+                    jobProgressFlag  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'true' : 'false') //Commented Temporarily
                 }
             }
         }
         stage ('Stage-2: Checkout SCM'){
             when {
                 expression {
-                    return "${jobProgressFlag}"
+                    if ("${jobProgressFlag}" != 'true'){
+                        return "${jobProgressFlag}"
+                    }
                 }
             }
             steps{
@@ -115,7 +117,9 @@ pipeline {
         stage('Stage-3: Generating and analysing changes on branch...'){
             when {
                 expression {
-                    return "${jobProgressFlag}"
+                    if ("${jobProgressFlag}" != 'true'){
+                        return "${jobProgressFlag}"
+                    }
                 }
             }
             steps{
@@ -151,7 +155,9 @@ pipeline {
         stage('Stage-4: Checking status to trigger downstream Job ....'){
             when {
                 expression {
-                    return "${jobProgressFlag}"
+                    if ("${jobProgressFlag}" != 'true'){
+                        return "${jobProgressFlag}"
+                    }
                 }
             }            
             steps{
