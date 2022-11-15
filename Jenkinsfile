@@ -92,13 +92,7 @@ pipeline {
             }
         }
         stage ('Stage-2: Checkout SCM'){
-            when {
-                expression {
-                    if ("${jobProgressFlag}" != 'true'){
-                        return "${jobProgressFlag}"
-                    }
-                }
-            }
+            when { "${jobProgressFlag}" == 'true'}
             steps{
                 checkout([
                     $class: 'GitSCM', 
@@ -115,13 +109,7 @@ pipeline {
             }
         }
         stage('Stage-3: Generating and analysing changes on branch...'){
-            when {
-                expression {
-                    if ("${jobProgressFlag}" != 'true'){
-                        return "${jobProgressFlag}"
-                    }
-                }
-            }
+            when { "${jobProgressFlag}" == 'true'}
             steps{
                 script{
                     echo " Generating the git diff log to find the list of file modified...."
@@ -153,13 +141,7 @@ pipeline {
             }
         }
         stage('Stage-4: Checking status to trigger downstream Job ....'){
-            when {
-                expression {
-                    if ("${jobProgressFlag}" != 'true'){
-                        return "${jobProgressFlag}"
-                    }
-                }
-            }            
+            when { "${jobProgressFlag}" == 'true'}        
             steps{
                 script{
                     if ("${triggerDownstreamFlag}" == "build-&-provision"){
