@@ -88,6 +88,7 @@ pipeline {
                     //------------------------------------
                     //error("Aborting the build.") //Commented Temporarily
                     jobProgressFlag  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'true' : 'false') //Commented Temporarily
+                    echo "jobProgressFlag ==> ${jobProgressFlag}"
                 }
             }
         }
