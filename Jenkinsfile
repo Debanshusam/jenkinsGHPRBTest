@@ -9,6 +9,7 @@ def failureEmailbody = "Pull Request Build Failed : ${ghprbPullTitle} . Link: ${
 def successEmailsubject = "Pull Request Build Succeeded : ${ghprbPullTitle} . Link: ${ghprbPullLink}"
 def successEmailbody = "Pull Request Build Succeeded : ${ghprbPullTitle} . Link: ${ghprbPullLink} "
 def emailReceipts = 'debanshusamantaray@gmail.com'
+def jobProgressFlag = "true"
 pipeline {
     parameters {
         string(name: 'jobDebug',
@@ -69,21 +70,33 @@ pipeline {
         stage('Stage-1: Checking the branch and PR naming convention..') {
             steps {
                 script{
-                 def  targetBranchCheckFlag = sh (returnStdout: true, script:"""if [[ "${env.ghprbTargetBranch}" == "develop" ]]; then echo "matched";else echo "false";fi""").trim()
-                 echo "targetBranchCheckFlag ==> ${targetBranchCheckFlag} ==> ${env.ghprbTargetBranch}"
+                    writeFile(file: 'targetBranchCheckFlag.sh',text: """if [[ "${env.ghprbTargetBranch}" == "develop" ]]; then echo "matched";else echo "false";fi""")
+                    sh 'chmod +x targetBranchCheckFlag.sh'
+                    def  targetBranchCheckFlag = sh (returnStdout: true, script:'bash targetBranchCheckFlag.sh').trim()
+                    echo "targetBranchCheckFlag ==> ${targetBranchCheckFlag} ==> ${env.ghprbTargetBranch}"
+                    //------------------------------------
+                    writeFile(file: 'sourceBranchPatternCheckFlag.sh',text: """if [[ "${env.ghprbSourceBranch}" =~ "${sourceBranchPattern}" ]]; then echo "matched";else echo "false";fi""")
+                    sh 'chmod +x sourceBranchPatternCheckFlag.sh'
+                    def  sourceBranchPatternCheckFlag = sh (returnStdout: true, script:'bash sourceBranchPatternCheckFlag.sh').trim()
+                    echo "sourceBranchPatternCheckFlag ==> ${sourceBranchPatternCheckFlag} ==> ${env.ghprbSourceBranch}"
+                    //------------------------------------
 
-                 def  sourceBranchPatternCheckFlag = sh (returnStdout: true, script:"""if [[ "${env.ghprbSourceBranch}" =~ "${sourceBranchPattern}" ]]; then echo "matched";else echo "false";fi""").trim()
-                 echo "sourceBranchPatternCheckFlag ==> ${sourceBranchPatternCheckFlag} ==> ${env.ghprbSourceBranch}"
-
-                def  prNamingPatternCheckFlag = sh (returnStdout: true, script:"""if [[ "${env.ghprbPullTitle}" == "${prNamingPattern}" ]]; then echo "matched";else echo "false";fi""").trim()
-                echo "prNamingPatternCheckFlag ==> ${prNamingPatternCheckFlag} ==> ${env.ghprbPullTitle}"
-
-                //error("Aborting the build.") //Commented Temporarily
-                //currentBuild.result  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'SUCCESS' : 'FAILURE') //Commented Temporarily
+                    writeFile(file: 'prNamingPatternCheckFlag.sh',text: """if [[ "${env.ghprbPullTitle}" == "${prNamingPattern}" ]]; then echo "matched";else echo "false";fi""")
+                    sh 'chmod +x prNamingPatternCheckFlag.sh'
+                    def  prNamingPatternCheckFlag = sh (returnStdout: true, script:'bash prNamingPatternCheckFlag.sh').trim()
+                    echo "prNamingPatternCheckFlag ==> ${prNamingPatternCheckFlag} ==> ${env.ghprbPullTitle}"
+                    //------------------------------------
+                    //error("Aborting the build.") //Commented Temporarily
+                    jobProgressFlag  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'true' : ) //Commented Temporarily
                 }
             }
         }
         stage ('Stage-2: Checkout SCM'){
+            when {
+                expression {
+                    return "${jobProgressFlag}"
+                }
+            }
             steps{
                 checkout([
                     $class: 'GitSCM', 
@@ -100,6 +113,11 @@ pipeline {
             }
         }
         stage('Stage-3: Generating and analysing changes on branch...'){
+            when {
+                expression {
+                    return "${jobProgressFlag}"
+                }
+            }
             steps{
                 script{
                     echo " Generating the git diff log to find the list of file modified...."
@@ -131,6 +149,11 @@ pipeline {
             }
         }
         stage('Stage-4: Checking status to trigger downstream Job ....'){
+            when {
+                expression {
+                    return "${jobProgressFlag}"
+                }
+            }            
             steps{
                 script{
                     if ("${triggerDownstreamFlag}" == "build-&-provision"){
