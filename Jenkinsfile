@@ -26,14 +26,14 @@ pipeline {
         description: 'Please input the Target branch regex pattern',trim: true)
         //to be updated
         string(name: 'sourceBranchPattern',
-        defaultValue: 'feature/GCPID-[Xx\\d]{0,}-[a-zA-Z]{0,}[-]{0,1}[\\d]{0,}',
+        defaultValue: 'feature/[Gg][Cc][Pp][Ii][Dd]-[Xx\\d]{0,}-[a-zA-Z]{0,}[-]{0,1}[\\d]{0,}',
         description: 'Please input the Source branch regex pattern',trim: true)
         //to be updated
         string(name: 'prName',
         defaultValue: "${ghprbPullTitle}",
         description: 'Please input the PR Name',trim: true)
         string(name: 'prNamingPattern',
-        defaultValue: 'GCPID:[\\sXx\\d]*-[a-zA-Z]{0,}[-]{0,1}[a-zA-Z]{0,}',
+        defaultValue: '[Gg][Cc][Pp][Ii][Dd]:[\\sXx\\d]*-[a-zA-Z]{0,}[-]{0,1}[a-zA-Z]{0,}',
         description: 'Please input the PR Naming regex pattern',trim: true)
         //to be updated
         string(name: 'repoURL',
