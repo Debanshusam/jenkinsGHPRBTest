@@ -1,0 +1,1 @@
+if [[ "GCPID: XXXX-testjob" == "GCPID:[\sXx\d]*-[a-zA-Z]{0,}[-]{0,1}[a-zA-Z]{0,}" ]]; then echo "matched";else echo "false";fi
