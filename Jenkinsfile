@@ -84,7 +84,7 @@ pipeline {
                     //text: """word=${env.ghprbSourceBranch};pattern=${sourceBranchPattern};
                    //     if [[ $word =~ $pattern ]]; then echo "matched";else echo "false";fi""")
                    // sh 'chmod +x sourceBranchPatternCheckFlag.sh'
-                    def  sourceBranchPatternCheckFlag = sh (returnStdout: true, script:"bash patternMatchingScript.sh ${env.ghprbSourceBranch} ${sourceBranchPattern}").trim()
+                    def  sourceBranchPatternCheckFlag = sh (returnStdout: true, script:"bash patternMatchingScript.sh '${env.ghprbSourceBranch}' '${sourceBranchPattern}' ").trim()
                     echo "sourceBranchPatternCheckFlag ==> ${sourceBranchPatternCheckFlag} ==> ${env.ghprbSourceBranch}"
                     //------------------------------------
 
@@ -97,7 +97,7 @@ pipeline {
                     //if [[ $word =~ $pattern ]]; then echo "matched";else echo "false";fi
                    // """)
                     //sh 'chmod +x prNamingPatternCheckFlag.sh'
-                    def  prNamingPatternCheckFlag = sh (returnStdout: true, script:"bash patternMatchingScript.sh ${env.ghprbPullTitle} ${prNamingPattern}").trim()
+                    def  prNamingPatternCheckFlag = sh (returnStdout: true, script:"bash patternMatchingScript.sh '${env.ghprbPullTitle}' '${prNamingPattern}' ").trim()
                     echo "prNamingPatternCheckFlag ==> ${prNamingPatternCheckFlag} ==> ${env.ghprbPullTitle}"
 
                     //------------------------------------
