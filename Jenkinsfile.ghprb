@@ -179,8 +179,8 @@ pipeline {
                         def downStreamJob1ReturnValue = build job: "${downStreamJob1}", parameters: [
                         string(name: 'fortifyScanRequired', value: 'true'), // pending update
                         string(name: 'twistlockScanRequired', value: 'true'), // pending update
-                        string(name: 'ignoreVulnerableImages', value: 'true'), // pending update
-                        booleanParam(name: 'Trigger_Provision_Job', value: false)],
+                        string(name: 'ignoreVulnerableImages', value: 'true')], // pending update
+                        //booleanParam(name: 'Trigger_Provision_Job', value: false)],
                         propagate : true,
                         quietPeriod : 5,
                         wait : true
