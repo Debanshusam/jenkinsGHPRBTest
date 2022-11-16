@@ -26,14 +26,14 @@ pipeline {
         description: 'Please input the Target branch regex pattern',trim: true)
         //to be updated
         string(name: 'sourceBranchPattern',
-        defaultValue: 'feature/[Gg][Cc][Pp][Ii][Dd]-[Xx\\d]{0,}-[a-zA-Z]{0,}[-]{0,1}[\\d]{0,}',
+        defaultValue: '[Ff]eature/[Gg][Cc][Pp][Ii][Dd]-[Xx\\d]{0,}-[a-zA-Z]{0,}[-]{0,1}[\\d]{0,}',
         description: 'Please input the Source branch regex pattern',trim: true)
         //to be updated
         string(name: 'prName',
         defaultValue: "${ghprbPullTitle}",
         description: 'Please input the PR Name',trim: true)
         string(name: 'prNamingPattern',
-        defaultValue: '[Gg][Cc][Pp][Ii][Dd]:[\\sXx\\d]*-[a-zA-Z]{0,}[-]{0,1}[a-zA-Z]{0,}',
+        defaultValue: '[Gg][Cc][Pp][Ii][Dd]:[\\sXx\\d]{0,}-[a-zA-Z]{0,}[-]{0,1}[a-zA-Z]{0,}',
         description: 'Please input the PR Naming regex pattern',trim: true)
         //to be updated
         string(name: 'repoURL',
@@ -70,7 +70,7 @@ pipeline {
         stage('Stage-1: Checking the branch and PR naming convention..') {
             steps {
                 script{
-                    writeFile(file: 'targetBranchCheckFlag.sh',text: """if [[ "${env.ghprbTargetBranch}" == "develop" ]]; then echo "matched";else echo "false";fi""")
+                    writeFile(file: 'targetBranchCheckFlag.sh',text: """if [[ "${env.ghprbTargetBranch}" == 'develop' ]]; then echo "matched";else echo "false";fi""")
                     sh 'chmod +x targetBranchCheckFlag.sh'
                     def  targetBranchCheckFlag = sh (returnStdout: true, script:'bash targetBranchCheckFlag.sh').trim()
                     echo "targetBranchCheckFlag ==> ${targetBranchCheckFlag} ==> ${env.ghprbTargetBranch}"
@@ -81,7 +81,7 @@ pipeline {
                     echo "sourceBranchPatternCheckFlag ==> ${sourceBranchPatternCheckFlag} ==> ${env.ghprbSourceBranch}"
                     //------------------------------------
 
-                    writeFile(file: 'prNamingPatternCheckFlag.sh',text: """if [[ "${env.ghprbPullTitle}" == "${prNamingPattern}" ]]; then echo "matched";else echo "false";fi""")
+                    writeFile(file: 'prNamingPatternCheckFlag.sh',text: """if [[ "${env.ghprbPullTitle}" =~ "${prNamingPattern}" ]]; then echo "matched";else echo "false";fi""")
                     sh 'chmod +x prNamingPatternCheckFlag.sh'
                     def  prNamingPatternCheckFlag = sh (returnStdout: true, script:'bash prNamingPatternCheckFlag.sh').trim()
                     echo "prNamingPatternCheckFlag ==> ${prNamingPatternCheckFlag} ==> ${env.ghprbPullTitle}"
@@ -89,6 +89,7 @@ pipeline {
                     //error("Aborting the build.") //Commented Temporarily
                     jobProgressFlag  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'true' : 'false') //Commented Temporarily
                     echo "jobProgressFlag ==> ${jobProgressFlag}"
+                    currentBuild.result = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'SUCCESS' : 'FAILURE') 
                 }
             }
         }
