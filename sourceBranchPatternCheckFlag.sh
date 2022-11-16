@@ -1,1 +1,1 @@
-if [[ "feature/gcpid-xxxx-testjob" =~ "feature/GCPID-[Xx\d]{0,}-[a-zA-Z]{0,}[-]{0,1}[\d]{0,}" ]]; then echo "matched";else echo "false";fi
+if [[ "feature/gcpid-xxxx-testjob" =~ feature/[Gg][Cc][Pp][Ii][Dd]-[Xx\d]{0,}-[a-zA-Z]{0,}[-]{0,1}[\d]{0,} ]]; then echo "matched";else echo "false";fi

@@ -75,13 +75,13 @@ pipeline {
                     def  targetBranchCheckFlag = sh (returnStdout: true, script:'bash targetBranchCheckFlag.sh').trim()
                     echo "targetBranchCheckFlag ==> ${targetBranchCheckFlag} ==> ${env.ghprbTargetBranch}"
                     //------------------------------------
-                    writeFile(file: 'sourceBranchPatternCheckFlag.sh',text: """if [[ "${env.ghprbSourceBranch}" =~ "${sourceBranchPattern}" ]]; then echo "matched";else echo "false";fi""")
+                    writeFile(file: 'sourceBranchPatternCheckFlag.sh',text: """if [[ "${env.ghprbSourceBranch}" =~ ${sourceBranchPattern} ]]; then echo "matched";else echo "false";fi""")
                     sh 'chmod +x sourceBranchPatternCheckFlag.sh'
                     def  sourceBranchPatternCheckFlag = sh (returnStdout: true, script:'bash sourceBranchPatternCheckFlag.sh').trim()
                     echo "sourceBranchPatternCheckFlag ==> ${sourceBranchPatternCheckFlag} ==> ${env.ghprbSourceBranch}"
                     //------------------------------------
 
-                    writeFile(file: 'prNamingPatternCheckFlag.sh',text: """if [[ "${env.ghprbPullTitle}" =~ "${prNamingPattern}" ]]; then echo "matched";else echo "false";fi""")
+                    writeFile(file: 'prNamingPatternCheckFlag.sh',text: """if [[ "${env.ghprbPullTitle}" =~ ${prNamingPattern} ]]; then echo "matched";else echo "false";fi""")
                     sh 'chmod +x prNamingPatternCheckFlag.sh'
                     def  prNamingPatternCheckFlag = sh (returnStdout: true, script:'bash prNamingPatternCheckFlag.sh').trim()
                     echo "prNamingPatternCheckFlag ==> ${prNamingPatternCheckFlag} ==> ${env.ghprbPullTitle}"
