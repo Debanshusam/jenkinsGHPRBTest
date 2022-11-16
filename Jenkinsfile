@@ -33,7 +33,7 @@ pipeline {
         defaultValue: "${ghprbPullTitle}",
         description: 'Please input the PR Name',trim: true)
         string(name: 'prNamingPattern',
-        defaultValue: '[Gg][Cc][Pp][Ii][Dd]:[\\sXx\\d]{0,}-[a-zA-Z]{0,}[-]{0,1}[a-zA-Z]{0,}',
+        defaultValue: '[Gg][Cc][Pp][Ii][Dd]:[\\sXx\\d]{0,}-[a-zA-Z]{0,}[-]{0,1}[a-zA-Z\\d]{0,}',
         description: 'Please input the PR Naming regex pattern',trim: true)
         //to be updated
         string(name: 'repoURL',
