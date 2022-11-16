@@ -77,7 +77,7 @@ pipeline {
                     //writeFile(file: 'targetBranchCheckFlag.sh',text: """if [[ ${env.ghprbTargetBranch} == develop ]]; then echo "matched";else echo "false";fi""")
                     //sh 'chmod +x targetBranchCheckFlag.sh'
 
-                    def  targetBranchCheckFlag = sh (returnStdout: true, script:"bash patternMatchingScript.sh ${env.ghprbTargetBranch} develop").trim()
+                    def  targetBranchCheckFlag = sh (returnStdout: true, script:"bash patternMatchingScript.sh '${env.ghprbTargetBranch}' develop").trim()
                     echo "targetBranchCheckFlag ==> ${targetBranchCheckFlag} ==> ${env.ghprbTargetBranch}"
                     //------------------------------------
                    // writeFile(file: 'sourceBranchPatternCheckFlag.sh',
