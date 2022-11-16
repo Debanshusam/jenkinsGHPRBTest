@@ -115,7 +115,7 @@ pipeline {
                     $class: 'GitSCM', 
                     branches: [[name: "${params.sourceBranch}"]],
                     extensions: [],
-                    userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline', refspec: "+refs/heads/main:refs/remotes/origin/main +refs/heads/develop:refs/remotes/origin/develop +refs/heads/${params.sourceBranch}:refs/remotes/origin/${params.sourceBranch}", url: "${params.repoURL}"]]
+                    userRemoteConfigs: [[credentialsId: 'gh-user-passwd-formultibranchpipeline', refspec: "+refs/heads/develop:refs/remotes/origin/develop +refs/heads/${params.sourceBranch}:refs/remotes/origin/${params.sourceBranch}", url: "${params.repoURL}"]]
                 ])
                 echo " Branches available locally..."
                 sh "git branch "
@@ -166,23 +166,11 @@ pipeline {
                         def downStreamJob1ReturnValue = build job: "${downStreamJob1}", parameters: [
                         string(name: 'fortifyScanRequired', value: 'true'), // pending update
                         string(name: 'twistlockScanRequired', value: 'true'), // pending update
-                        string(name: 'ignoreVulnerableImages', value: 'true'), // pending update
-                        booleanParam(name: 'Trigger-Provision-Job', value: true)],
+                        string(name: 'ignoreVulnerableImages', value: 'true')], // pending update
+                        //booleanParam(name: 'Trigger_Provision_Job', value: true)],
                         propagate : true,
                         quietPeriod : 5,
                         wait : true
-
-                        //trigger downstream job-2 ==> provision only when Build is success
-                        /*
-                        def downStreamJob2ReturnValue = build job: "${downStreamJob2}", parameters: [
-                            string(name: 'version',
-                            defaultValue: "${Build_Version}",
-                            description: 'REQUIRED Version of release to deploy. Single version for all artifacts (images, helm chart, dataproc init actions).',
-                            trim: true)
-                            ],
-                            propagate : true,
-                            quietPeriod : 5,
-                            wait : true*/
                     }
                 }
                 script{    
@@ -192,7 +180,7 @@ pipeline {
                         string(name: 'fortifyScanRequired', value: 'true'), // pending update
                         string(name: 'twistlockScanRequired', value: 'true'), // pending update
                         string(name: 'ignoreVulnerableImages', value: 'true'), // pending update
-                        booleanParam(name: 'Trigger-Provision-Job', value: false)],
+                        booleanParam(name: 'Trigger_Provision_Job', value: false)],
                         propagate : true,
                         quietPeriod : 5,
                         wait : true
