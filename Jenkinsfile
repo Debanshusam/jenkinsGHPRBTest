@@ -70,33 +70,36 @@ pipeline {
         stage('Stage-1: Checking the branch and PR naming convention..') {
             steps {
                 script{
-                    writeFile(file: 'targetBranchCheckFlag.sh',text: """if [[ ${env.ghprbTargetBranch} == develop ]]; then echo "matched";else echo "false";fi""")
-                    sh 'chmod +x targetBranchCheckFlag.sh'
-                    def  targetBranchCheckFlag = sh (returnStdout: true, script:'bash targetBranchCheckFlag.sh').trim()
+                    writeFile(file: 'patternMatchingScript.sh',text: '''word=$1;pattern=$2;
+                    if [[ $word =~ $pattern ]]; then echo "matched";else echo "false";fi''')
+                    sh 'chmod +x patternMatchingScript.sh'
+
+                    //writeFile(file: 'targetBranchCheckFlag.sh',text: """if [[ ${env.ghprbTargetBranch} == develop ]]; then echo "matched";else echo "false";fi""")
+                    //sh 'chmod +x targetBranchCheckFlag.sh'
+
+                    def  targetBranchCheckFlag = sh (returnStdout: true, script:"bash patternMatchingScript.sh ${env.ghprbTargetBranch} develop").trim()
                     echo "targetBranchCheckFlag ==> ${targetBranchCheckFlag} ==> ${env.ghprbTargetBranch}"
                     //------------------------------------
-                    writeFile(file: 'sourceBranchPatternCheckFlag.sh',
-                    text: """
-                    word=${env.ghprbSourceBranch};
-                    pattern=${sourceBranchPattern};
-                    if [[ $word =~ $pattern ]]; then echo "matched";else echo "false";fi
-                    """)
-                    sh 'chmod +x sourceBranchPatternCheckFlag.sh'
-                    def  sourceBranchPatternCheckFlag = sh (returnStdout: true, script:'bash sourceBranchPatternCheckFlag.sh').trim()
+                   // writeFile(file: 'sourceBranchPatternCheckFlag.sh',
+                    //text: """word=${env.ghprbSourceBranch};pattern=${sourceBranchPattern};
+                   //     if [[ $word =~ $pattern ]]; then echo "matched";else echo "false";fi""")
+                   // sh 'chmod +x sourceBranchPatternCheckFlag.sh'
+                    def  sourceBranchPatternCheckFlag = sh (returnStdout: true, script:"bash patternMatchingScript.sh ${env.ghprbSourceBranch} ${sourceBranchPattern}").trim()
                     echo "sourceBranchPatternCheckFlag ==> ${sourceBranchPatternCheckFlag} ==> ${env.ghprbSourceBranch}"
                     //------------------------------------
 
-                    writeFile(file: 'prNamingPatternCheckFlag.sh',text: """if [[ ${env.ghprbPullTitle} =~ ${prNamingPattern} ]]; then echo "matched";else echo "false";fi""")
-                    writeFile(
-                        file: 'sourceBranchPatternCheckFlag.sh',
-                        text: """
-                    word=${env.ghprbPullTitle};
-                    pattern=${prNamingPattern};
-                    if [[ $word =~ $pattern ]]; then echo "matched";else echo "false";fi
-                    """)
-                    sh 'chmod +x prNamingPatternCheckFlag.sh'
-                    def  prNamingPatternCheckFlag = sh (returnStdout: true, script:'bash prNamingPatternCheckFlag.sh').trim()
+                    //writeFile(file: 'prNamingPatternCheckFlag.sh',text: """if [[ ${env.ghprbPullTitle} =~ ${prNamingPattern} ]]; then echo "matched";else echo "false";fi""")
+                   // writeFile(
+                  //      file: 'sourceBranchPatternCheckFlag.sh',
+                   //     text: """
+                  //  word=${env.ghprbPullTitle};
+                   // pattern=${prNamingPattern};
+                    //if [[ $word =~ $pattern ]]; then echo "matched";else echo "false";fi
+                   // """)
+                    //sh 'chmod +x prNamingPatternCheckFlag.sh'
+                    def  prNamingPatternCheckFlag = sh (returnStdout: true, script:"bash patternMatchingScript.sh ${env.ghprbPullTitle} ${prNamingPattern}").trim()
                     echo "prNamingPatternCheckFlag ==> ${prNamingPatternCheckFlag} ==> ${env.ghprbPullTitle}"
+
                     //------------------------------------
                     //error("Aborting the build.") //Commented Temporarily
                     jobProgressFlag  = (("${targetBranchCheckFlag}" == 'matched' && "${sourceBranchPatternCheckFlag}" == 'matched' && "${prNamingPatternCheckFlag}" == 'matched') ? 'true' : 'false') //Commented Temporarily
