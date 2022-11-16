@@ -1,1 +1,1 @@
-if [[ "develop" == "develop" ]]; then echo "matched";else echo "false";fi
+if [[ develop == develop ]]; then echo "matched";else echo "false";fi
