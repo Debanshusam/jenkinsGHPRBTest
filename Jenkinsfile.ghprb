@@ -1,6 +1,6 @@
 //----------------------
-def downStreamJob1='Build Artifacts'
-def downStreamJob2='2. Project provisioning'
+def downStreamJob1="Build Artifacts/${ghprbSourceBranch}"
+def downStreamJob2="2. Project provisioning/${ghprbSourceBranch}"
 def triggerDownstreamFlag='NO DATA SET' //"build-only" /"build-&-provision" / "skip-no-validChanges"
 //-----------------------
 // job('US-Staging-Check')
