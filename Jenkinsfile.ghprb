@@ -12,8 +12,8 @@ def emailReceipts = 'debanshusamantaray@gmail.com'
 def jobProgressFlag = "true"
 pipeline {
     parameters {
-        string(name: 'jobDebug',
-        defaultValue: 'false', //'false'
+        choice(name: 'jobDebug',
+        choices: ['true','false'], //'false'
         description: 'enable to show environment values',trim: true)
         string(name: 'targetBranch',
         defaultValue: "${ghprbTargetBranch}",
