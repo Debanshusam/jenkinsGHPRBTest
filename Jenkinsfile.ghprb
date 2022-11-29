@@ -14,7 +14,7 @@ pipeline {
     parameters {
         choice(name: 'jobDebug',
         choices: ['true','false'], //'false'
-        description: 'enable to show environment values',trim: true)
+        description: 'enable to show environment values')
         string(name: 'targetBranch',
         defaultValue: "${ghprbTargetBranch}",
         description: 'Please input the Target branch',trim: true)
